@@ -1,4 +1,4 @@
-#instruction
+# Instructions
 Copy the Contents of main.js
 Create a new Bookmark on your Internet Browser
 Set the title to TTRS-BOT or whatever you want it to be then set the URL as the code you copied from main.js
