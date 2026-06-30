@@ -1,7 +1,7 @@
 (function () {
   if (window._ttrsBot) { window._ttrsBot.stop(); return; }
 
-  const VERSION = 'v2.1';
+  const VERSION = 'Ultimate TTRS Bot V1.1';
 
   const STATE = {
     answered: 0, streak: 0, bestStreak: 0,
@@ -9,8 +9,8 @@
     running: true, paused: false, speedMode: 'normal',
   };
 
-  const SPEEDS   = { turbo:[180,400], normal:[480,920], human:[900,1800] };
-  const STUCK_MS = { turbo:1000, normal:1800, human:3500 };
+  const SPEEDS   = { inhuman:[70,100], normal:[480,920], human:[900,1800] };
+  const STUCK_MS = { inhuman:200, normal:1800, human:3500 };
   const randDelay = () => { const [a,b]=SPEEDS[STATE.speedMode]; return a+Math.random()*(b-a); };
 
   // ── STYLES ──────────────────────────────────────────────
@@ -66,7 +66,7 @@
       <button id="_ttrsClose">✕</button>
     </div>
     <div id="_ttrsBody">
-      <div id="_ttrsStatus">● ON</div>
+      <div id="_ttrsStatus">TTRS Bot is cooking...</div>
       <div id="_ttrsQ">waiting for question...</div>
       <div id="_ttrsBar"><div id="_ttrsBarFill"></div></div>
       <div class="rx-row">
@@ -81,12 +81,12 @@
         <button class="rx-btn" id="_rxSkip">⏭ Skip</button>
       </div>
       <div class="rx-btns">
-        <button class="rx-btn" id="_rxTurbo">⚡ Turbo</button>
+        <button class="rx-btn" id="_rxinhuman">⚡ inhuman</button>
         <button class="rx-btn s-on" id="_rxNormal">▶ Normal</button>
         <button class="rx-btn" id="_rxHuman">🐢 Human</button>
       </div>
       <div class="rx-foot">
-        <span id="_rxMode">normal</span><span>${VERSION} · silent ttrs bot</span>
+        <span id="_rxMode">normal</span><span>${VERSION} ·W TTRS BOT</span>
       </div>
     </div>
   `;
@@ -99,8 +99,8 @@
     const el = $('_ttrsStatus'); if (!el) return;
     el.textContent = '● ' + txt;
     el.style.color = col||'#fff';
-    el.style.borderColor = (col||'#ff2d78')+'55';
-    el.style.background  = (col||'#ff2d78')+'14';
+    el.style.borderColor = (col||'#00005d')+'55';
+    el.style.background  = (col||'#000055')+'14';
   }
 
   function updateStats() {
@@ -123,8 +123,8 @@
   }
 
   function setSpeedUI(mode) {
-    ['_rxTurbo','_rxNormal','_rxHuman'].forEach(id=>{const b=$(id);if(b)b.className='rx-btn';});
-    const map={turbo:'_rxTurbo',normal:'_rxNormal',human:'_rxHuman'};
+    ['_rxinhuman','_rxNormal','_rxHuman'].forEach(id=>{const b=$(id);if(b)b.className='rx-btn';});
+    const map={inhuman:'_rxinhuman',normal:'_rxNormal',human:'_rxHuman'};
     const btn=$(map[mode]); if(btn) btn.classList.add('s-on');
     const m=$('_rxMode'); if(m) m.textContent=mode;
   }
@@ -224,7 +224,7 @@
     setStatus('SKIPPED','#ff9800');
     setTimeout(()=>setStatus('ON','#00ff88'),800);
   };
-  $('_rxTurbo').onclick =()=>{STATE.speedMode='turbo'; setSpeedUI('turbo'); STATE.lastNewQ=Date.now();};
+  $('_rxinhuman').onclick =()=>{STATE.speedMode='inhuman'; setSpeedUI('inhuman'); STATE.lastNewQ=Date.now();};
   $('_rxNormal').onclick=()=>{STATE.speedMode='normal';setSpeedUI('normal');STATE.lastNewQ=Date.now();};
   $('_rxHuman').onclick =()=>{STATE.speedMode='human'; setSpeedUI('human'); STATE.lastNewQ=Date.now();};
   $('_ttrsClose').onclick=stop;
