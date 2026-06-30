@@ -212,7 +212,7 @@
       let m;
       if((m=txt.match(/(\d+)\s*[×x\*]\s*(\d+)/i))) return +m[1]*+m[2];
       if((m=txt.match(/(\d+)\s*[÷\/]\s*(\d+)/)))   return +m[2]?+m[1]/+m[2]:null;
-      if((m=txt.match(/(\d+)\s*\+\s*(\d+)/)))       return +m[1]++m[2];
+      if((m=txt.match(/(\d+)\s*\+\s*(\d+)/)))       return +m[1]+ +m[2];
       if((m=txt.match(/(\d+)\s*[-−]\s*(\d+)/)))     return +m[1]-+m[2];
       return null;
     }
