@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 TTRS Bot - Bookmarklet Setup</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #050505 0%, #0d0d0d 100%);
+      font-family: 'Courier New', monospace;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: #050505;
+      border: 2px solid #ff2d78;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 0 60px rgba(255,45,120,.4), 0 0 10px rgba(255,45,120,.2);
+      animation: slideIn 0.5s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #2a2a2a;
+      padding-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      color: #ff2d78;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 900;
+    }
+
+    .header p {
+      color: #888;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    .version {
+      display: inline-block;
+      background: rgba(255,45,120,.1);
+      border: 1px solid #ff2d78;
+      color: #ff2d78;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      color: #ffd54f;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '▶';
+      color: #ff2d78;
+    }
+
+    .bookmarklet-box {
+      background: #0d0d0d;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 15px;
+      max-height: 200px;
+      overflow-y: auto;
+      word-break: break-all;
+      font-size: 11px;
+      color: #00ff88;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .bookmarklet-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .bookmarklet-box::-webkit-scrollbar-track {
+      background: #1a1a1a;
+      border-radius: 3px;
+    }
+
+    .bookmarklet-box::-webkit-scrollbar-thumb {
+      background: #ff2d78;
+      border-radius: 3px;
+    }
+
+    .bookmarklet-box::-webkit-scrollbar-thumb:hover {
+      background: #ffd54f;
+    }
+
+    .copy-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #c2006e, #ff2d78);
+      border: 2px solid #ff2d78;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      font-family: 'Courier New', monospace;
+      box-shadow: 0 0 20px rgba(255,45,120,.3);
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255,45,120,.6);
+      background: linear-gradient(90deg, #ff2d78, #ffd54f);
+    }
+
+    .copy-btn:active {
+      transform: translateY(0);
+    }
+
+    .copy-btn.copied {
+      background: linear-gradient(90deg, #00ff88, #00cc66);
+      border-color: #00ff88;
+      box-shadow: 0 0 30px rgba(0,255,136,.5);
+    }
+
+    .instructions {
+      background: rgba(255,45,120,.08);
+      border: 1px solid rgba(255,45,120,.3);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #ccc;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+
+    .instructions li {
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .instructions strong {
+      color: #ffd54f;
+    }
+
+    .instructions em {
+      color: #ff2d78;
+      font-style: normal;
+    }
+
+    .step-number {
+      display: inline-block;
+      background: #ff2d78;
+      color: #050505;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      font-weight: 700;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .feature {
+      background: rgba(0,255,136,.08);
+      border: 1px solid rgba(0,255,136,.3);
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 11px;
+      color: #ccc;
+    }
+
+    .feature strong {
+      color: #00ff88;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #2a2a2a;
+      color: #555;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .footer a {
+      color: #ff2d78;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: #ffd54f;
+    }
+
+    .status-message {
+      display: none;
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-weight: 700;
+      font-size: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .status-message.success {
+      background: rgba(0,255,136,.2);
+      border: 1px solid #00ff88;
+      color: #00ff88;
+    }
+
+    .status-message.error {
+      background: rgba(255,107,107,.2);
+      border: 1px solid #ff6b6b;
+      color: #ff6b6b;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 24px;
+      }
+
+      .header h1 {
+        font-size: 22px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <div class="header">
+      <h1>⚡ TTRS Bot</h1>
+      <p>Ultimate TTRS Answer Automation</p>
+      <div class="version">v1.1 • LOGIN PROTECTED</div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="features">
+      <div class="feature">
+        <strong>🔐 PASSWORD PROTECTED</strong>
+        100 unique access codes
+      </div>
+      <div class="feature">
+        <strong>⚙️ 3 SPEED MODES</strong>
+        Inhuman • Normal • Human
+      </div>
+      <div class="feature">
+        <strong>📊 LIVE STATS</strong>
+        Streak • Accuracy • Best Run
+      </div>
+      <div class="feature">
+        <strong>🎯 AUTO-ANSWER</strong>
+        ±55ms response time
+      </div>
+    </div>
+
+    <!-- BOOKMARKLET SECTION -->
+    <div class="section">
+      <div class="section-title">📋 Bookmarklet Code</div>
+      <div class="bookmarklet-box" id="bookmarklet">
+        Loading bookmarklet code...
+      </div>
+      <button class="copy-btn" id="copyBtn">📋 Copy Bookmarklet</button>
+      <div class="status-message" id="statusMessage"></div>
+    </div>
+
+    <!-- INSTRUCTIONS -->
+    <div class="section">
+      <div class="section-title">🚀 How to Install</div>
+      <div class="instructions">
+        <ol>
+          <li><span class="step-number">1</span> Click <em>Copy Bookmarklet</em> above</li>
+          <li><span class="step-number">2</span> Open your browser's <strong>Bookmark Manager</strong></li>
+          <li><span class="step-number">3</span> Create <strong>New Bookmark</strong></li>
+          <li><span class="step-number">4</span> Paste code into the <strong>URL</strong> field</li>
+          <li><span class="step-number">5</span> Go to any <strong>TTRS page</strong></li>
+          <li><span class="step-number">6</span> Click the bookmark to activate</li>
+          <li><span class="step-number">7</span> Enter password when prompted</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- PASSWORDS SECTION -->
+    <div class="section">
+      <div class="section-title">🔑 Access Passwords</div>
+      <div class="instructions">
+        <p><strong>100 unique passwords available.</strong> Check <code>code.txt</code> in the repo for the full list.</p>
+        <p style="margin-top: 10px; color: #888; font-size: 11px;">Example: <code>482715</code>, <code>903164</code>, <code>156928</code>, etc.</p>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      📍 <a href="https://github.com/willjudd747-jpg/w-ttrs-bot" target="_blank">View on GitHub</a> • Made with ⚡ by willjudd747
+    </div>
+  </div>
+
+  <script>
+    // Generate bookmarklet code
+    const bookmarkletCode = `javascript:(function(){fetch('https://raw.githubusercontent.com/willjudd747-jpg/w-ttrs-bot/main/bot.js').then(r=>r.text()).then(code=>eval(code)).catch(e=>alert('Error loading bot: '+e.message))})();`;
+
+    // Display bookmarklet
+    document.getElementById('bookmarklet').textContent = bookmarkletCode;
+
+    // Copy functionality
+    const copyBtn = document.getElementById('copyBtn');
+    const statusMessage = document.getElementById('statusMessage');
+
+    copyBtn.addEventListener('click', function() {
+      navigator.clipboard.writeText(bookmarkletCode).then(() => {
+        // Success feedback
+        copyBtn.classList.add('copied');
+        copyBtn.textContent = '✅ Copied!';
+
+        statusMessage.textContent = '✅ Bookmarklet copied to clipboard!';
+        statusMessage.classList.remove('error');
+        statusMessage.classList.add('success');
+        statusMessage.style.display = 'block';
+
+        // Reset button after 2 seconds
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.textContent = '📋 Copy Bookmarklet';
+        }, 2000);
+
+        // Hide status after 3 seconds
+        setTimeout(() => {
+          statusMessage.style.display = 'none';
+        }, 3000);
+      }).catch((err) => {
+        // Error feedback
+        statusMessage.textContent = '❌ Failed to copy. Try manually selecting the text.';
+        statusMessage.classList.remove('success');
+        statusMessage.classList.add('error');
+        statusMessage.style.display = 'block';
+
+        setTimeout(() => {
+          statusMessage.style.display = 'none';
+        }, 3000);
+      });
+    });
+
+    // Allow clicking in the bookmarklet box to select all
+    document.getElementById('bookmarklet').addEventListener('click', function() {
+      const range = document.createRange();
+      range.selectNodeContents(this);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+  </script>
+</body>
+</html>
