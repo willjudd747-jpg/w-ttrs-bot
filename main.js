@@ -1,1 +1,104 @@
-javascript:(function () %7B if (window._ttrsBot) %7B window._ttrsBot.stop()%3B return%3B %7D const VERSION %3D 'v2.1'%3B const STATE %3D %7B answered%3A 0%2C streak%3A 0%2C bestStreak%3A 0%2C lastQ%3A ''%2C answerAt%3A 0%2C lastNewQ%3A Date.now()%2C running%3A true%2C paused%3A false%2C speedMode%3A 'normal'%2C %7D%3B const SPEEDS %3D %7B turbo%3A%5B180%2C400%5D%2C normal%3A%5B480%2C920%5D%2C human%3A%5B900%2C1800%5D %7D%3B const STUCK_MS %3D %7B turbo%3A1000%2C normal%3A1800%2C human%3A3500 %7D%3B const randDelay %3D () %3D> %7B const %5Ba%2Cb%5D%3DSPEEDS%5BSTATE.speedMode%5D%3B return a%2BMath.random()*(b-a)%3B %7D%3B const stel %3D document.createElement('style')%3B stel.textContent %3D %60 %23_ttrs*%7Bbox-sizing%3Aborder-box%3Bfont-family%3A'Courier New'%2Cmonospace%7D %23_ttrs%7Bposition%3Afixed%3Bbottom%3A20px%3Bright%3A20px%3Bz-index%3A999999%3Bwidth%3A224px%3B background%3A%23050505%3Bborder%3A1px solid %23ff2d78%3Bborder-radius%3A12px%3B box-shadow%3A0 0 28px rgba(255%2C45%2C120%2C.4)%2C0 0 2px %23ff2d78%3B overflow%3Ahidden%3Bfont-size%3A11px%3Bcolor%3A%23fff%3B animation%3A_ttrsIn .35s cubic-bezier(.34%2C1.56%2C.64%2C1)%7D %40keyframes _ttrsIn%7Bfrom%7Btransform%3Ascale(.6) translateY(30px)%3Bopacity%3A0%7Dto%7Btransform%3Ascale(1)%3Bopacity%3A1%7D%7D %23_ttrsHdr%7Bbackground%3Alinear-gradient(90deg%2C%23c2006e%2C%23ff2d78)%3Bpadding%3A8px 12px%3B display%3Aflex%3Bjustify-content%3Aspace-between%3Balign-items%3Acenter%3Bcursor%3Amove%3Buser-select%3Anone%7D %23_ttrsHdr span%7Bfont-weight%3A900%3Bfont-size%3A12px%3Bletter-spacing%3A1.5px%3Btext-transform%3Auppercase%7D %23_ttrsHdr small%7Bfont-size%3A9px%3Bopacity%3A.75%7D %23_ttrsClose%7Bborder%3Anone%3Bbackground%3Atransparent%3Bcolor%3Argba(255%2C255%2C255%2C.7)%3Bcursor%3Apointer%3Bfont-size%3A15px%3Bline-height%3A1%3Bpadding%3A0 2px%7D %23_ttrsClose%3Ahover%7Bcolor%3A%23fff%7D %23_ttrsBody%7Bpadding%3A10px 12px%7D %23_ttrsStatus%7Btext-align%3Acenter%3Bpadding%3A5px%3Bmargin-bottom%3A8px%3Bborder-radius%3A6px%3B font-size%3A10px%3Bfont-weight%3A700%3Bletter-spacing%3A1.2px%3B background%3Argba(255%2C45%2C120%2C.1)%3Bborder%3A1px solid rgba(255%2C45%2C120%2C.3)%3Btransition%3Aall .2s%7D %23_ttrsQ%7Btext-align%3Acenter%3Bfont-size%3A15px%3Bfont-weight%3A900%3Bcolor%3A%23ffd54f%3B padding%3A6px 4px%3Bmargin-bottom%3A6px%3Bmin-height%3A30px%3Bborder-bottom%3A1px solid %231a1a1a%7D %23_ttrsBar%7Bheight%3A3px%3Bbackground%3A%23111%3Bborder-radius%3A2px%3Bmargin-bottom%3A8px%3Boverflow%3Ahidden%7D %23_ttrsBarFill%7Bheight%3A100%25%3Bwidth%3A0%25%3Bbackground%3Alinear-gradient(90deg%2C%23ff2d78%2C%23ffd54f)%3Bborder-radius%3A2px%3Btransition%3Awidth .5s%7D .rx-row%7Bdisplay%3Aflex%3Bjustify-content%3Aspace-between%3Balign-items%3Aflex-end%3Bmargin-bottom%3A7px%7D .rx-col%7Bdisplay%3Aflex%3Bflex-direction%3Acolumn%3Balign-items%3Acenter%7D .rx-label%7Bcolor%3A%23ff2d78%3Bfont-size%3A9px%3Bfont-weight%3A700%3Bletter-spacing%3A.8px%3Btext-transform%3Auppercase%3Bmargin-bottom%3A2px%7D .rx-val%7Bfont-size%3A14px%3Bfont-weight%3A900%7D .green%7Bcolor%3A%2300ff88%7D.pink%7Bcolor%3A%23ff2d78%7D.yellow%7Bcolor%3A%23ffd54f%7D.grey%7Bcolor%3A%23888%7D .rx-btns%7Bdisplay%3Aflex%3Bgap%3A4px%3Bmargin-bottom%3A5px%7D .rx-btn%7Bflex%3A1%3Bborder%3A1px solid %232a2a2a%3Bbackground%3A%230d0d0d%3Bcolor%3A%23aaa%3Bborder-radius%3A6px%3B padding%3A5px 3px%3Bfont-size%3A10px%3Bfont-weight%3A700%3Bcursor%3Apointer%3Btransition%3Aall .15s%3B text-align%3Acenter%3Bfont-family%3A'Courier New'%2Cmonospace%7D .rx-btn%3Ahover%7Bborder-color%3A%23ff2d78%3Bcolor%3A%23ff2d78%3Bbackground%3Argba(255%2C45%2C120%2C.1)%7D .rx-btn.on%7Bbackground%3Argba(255%2C45%2C120%2C.18)%3Bborder-color%3A%23ff2d78%3Bcolor%3A%23ff2d78%7D .rx-btn.s-on%7Bbackground%3Argba(0%2C255%2C136%2C.12)%3Bborder-color%3A%2300ff88%3Bcolor%3A%2300ff88%7D .rx-foot%7Bdisplay%3Aflex%3Bjustify-content%3Aspace-between%3Bfont-size%3A9px%3Bcolor%3A%23333%3B margin-top%3A4px%3Bpadding-top%3A4px%3Bborder-top%3A1px solid %23111%7D .rx-kick-flash%7Banimation%3A_ttrsKick .5s ease%7D %40keyframes _ttrsKick%7B0%25%2C100%25%7Bbox-shadow%3A0 0 28px rgba(255%2C45%2C120%2C.4)%7D 50%25%7Bbox-shadow%3A0 0 50px rgba(255%2C213%2C79%2C.9)%3Bborder-color%3A%23ffd54f%7D%7D %60%3B document.head.appendChild(stel)%3B const hud %3D document.createElement('div')%3B hud.id %3D '_ttrs'%3B hud.innerHTML %3D %60 <div id%3D"_ttrsHdr"> <span>🌹 ttrs<%2Fspan><small>%24%7BVERSION%7D<%2Fsmall> <button id%3D"_ttrsClose">✕<%2Fbutton> <%2Fdiv> <div id%3D"_ttrsBody"> <div id%3D"_ttrsStatus">● ON<%2Fdiv> <div id%3D"_ttrsQ">waiting for question...<%2Fdiv> <div id%3D"_ttrsBar"><div id%3D"_ttrsBarFill"><%2Fdiv><%2Fdiv> <div class%3D"rx-row"> <div class%3D"rx-col"><div class%3D"rx-label">Done<%2Fdiv><div class%3D"rx-val green" id%3D"_rxAns">0<%2Fdiv><%2Fdiv> <div class%3D"rx-col"><div class%3D"rx-label">Streak<%2Fdiv><div class%3D"rx-val yellow" id%3D"_rxStreak">0<%2Fdiv><%2Fdiv> <div class%3D"rx-col"><div class%3D"rx-label">Best<%2Fdiv><div class%3D"rx-val pink" id%3D"_rxBest">0<%2Fdiv><%2Fdiv> <div class%3D"rx-col"><div class%3D"rx-label">Next<%2Fdiv><div class%3D"rx-val grey" id%3D"_rxNext">—<%2Fdiv><%2Fdiv> <%2Fdiv> <div class%3D"rx-btns"> <button class%3D"rx-btn on" id%3D"_rxPause">⏸ Pause<%2Fbutton> <button class%3D"rx-btn" id%3D"_rxKick">⚡ Kick<%2Fbutton> <button class%3D"rx-btn" id%3D"_rxSkip">⏭ Skip<%2Fbutton> <%2Fdiv> <div class%3D"rx-btns"> <button class%3D"rx-btn" id%3D"_rxTurbo">⚡ Turbo<%2Fbutton> <button class%3D"rx-btn s-on" id%3D"_rxNormal">▶ Normal<%2Fbutton> <button class%3D"rx-btn" id%3D"_rxHuman">🐢 Human<%2Fbutton> <%2Fdiv> <div class%3D"rx-foot"> <span id%3D"_rxMode">normal<%2Fspan><span>%24%7BVERSION%7D · silent ttrs bot<%2Fspan> <%2Fdiv> <%2Fdiv> %60%3B document.body.appendChild(hud)%3B const %24 %3D id %3D> document.getElementById(id)%3B let nextInTimer %3D null%3B function setStatus(txt%2C col) %7B const el %3D %24('_ttrsStatus')%3B if (!el) return%3B el.textContent %3D '● ' %2B txt%3B el.style.color %3D col%7C%7C'%23fff'%3B el.style.borderColor %3D (col%7C%7C'%23ff2d78')%2B'55'%3B el.style.background %3D (col%7C%7C'%23ff2d78')%2B'14'%3B %7D function updateStats() %7B const a%3D%24('_rxAns')%2Cs%3D%24('_rxStreak')%2Cb%3D%24('_rxBest')%3B if(a) a.textContent%3DSTATE.answered%3B if(s) s.textContent%3DSTATE.streak%3B if(b) b.textContent%3DSTATE.bestStreak%3B const pct%3DSTATE.answered%3FMath.min(100%2C(STATE.streak%2FSTATE.answered)*100)%3A0%3B const f%3D%24('_ttrsBarFill')%3B if(f) f.style.width%3Dpct%2B'%25'%3B %7D function startCountdown(ms) %7B clearInterval(nextInTimer)%3B const end%3DDate.now()%2Bms%3B nextInTimer%3DsetInterval(()%3D>%7B const rem%3DMath.max(0%2Cend-Date.now())%3B const el%3D%24('_rxNext')%3B if(el) el.textContent%3Drem>0%3F(rem%2F1000).toFixed(1)%2B's'%3A'—'%3B if(rem<%3D0) clearInterval(nextInTimer)%3B %7D%2C80)%3B %7D function setSpeedUI(mode) %7B %5B'_rxTurbo'%2C'_rxNormal'%2C'_rxHuman'%5D.forEach(id%3D>%7Bconst b%3D%24(id)%3Bif(b)b.className%3D'rx-btn'%3B%7D)%3B const map%3D%7Bturbo%3A'_rxTurbo'%2Cnormal%3A'_rxNormal'%2Chuman%3A'_rxHuman'%7D%3B const btn%3D%24(map%5Bmode%5D)%3B if(btn) btn.classList.add('s-on')%3B const m%3D%24('_rxMode')%3B if(m) m.textContent%3Dmode%3B %7D function parse(txt) %7B txt%3Dtxt.replace(%2FNext%3A%2Fi%2C'').trim()%3B let m%3B if((m%3Dtxt.match(%2F(%5Cd%2B)%5Cs*%5B×x%5C*%5D%5Cs*(%5Cd%2B)%2Fi))) return %2Bm%5B1%5D*%2Bm%5B2%5D%3B if((m%3Dtxt.match(%2F(%5Cd%2B)%5Cs*%5B÷%5C%2F%5D%5Cs*(%5Cd%2B)%2F))) return %2Bm%5B2%5D%3F%2Bm%5B1%5D%2F%2Bm%5B2%5D%3Anull%3B if((m%3Dtxt.match(%2F(%5Cd%2B)%5Cs*%5C%2B%5Cs*(%5Cd%2B)%2F))) return %2Bm%5B1%5D%2B %2Bm%5B2%5D%3B if((m%3Dtxt.match(%2F(%5Cd%2B)%5Cs*%5B-−%5D%5Cs*(%5Cd%2B)%2F))) return %2Bm%5B1%5D-%2Bm%5B2%5D%3B return null%3B %7D function pressKey(key%2Ccode%2Ckc) %7B const o%3D%7Bkey%2Ccode%2CkeyCode%3Akc%2Cwhich%3Akc%2Cbubbles%3Atrue%2Ccancelable%3Atrue%7D%3B document.dispatchEvent(new KeyboardEvent('keydown'%2Co))%3B document.dispatchEvent(new KeyboardEvent('keypress'%2Co))%3B document.dispatchEvent(new KeyboardEvent('keyup'%2Co))%3B %7D function typeAnswer(answer) %7B for(let i%3D0%3Bi<5%3Bi%2B%2B) pressKey('Backspace'%2C'Backspace'%2C8)%3B for(const d of String(Math.round(answer)).split('')) pressKey(d%2C'Digit'%2Bd%2C48%2B(%2Bd))%3B pressKey('Enter'%2C'Enter'%2C13)%3B %7D function tryAnswer(force) %7B if(!STATE.running%7C%7CSTATE.paused) return%3B if(!force%26%26Date.now()-STATE.answerAt<randDelay()) return%3B const qEl%3Ddocument.querySelector('text.cls-main-30')%3B if(!qEl) return%3B const qTxt%3D(qEl.textContent%7C%7C'').trim()%3B if(!qTxt%7C%7C(!force%26%26qTxt%3D%3D%3DSTATE.lastQ)) return%3B const answer%3Dparse(qTxt)%3B if(answer%3D%3D%3Dnull) return%3B STATE.lastQ%3DqTxt%3B STATE.answerAt%3DDate.now()%3B STATE.lastNewQ%3DDate.now()%3B const qd%3D%24('_ttrsQ')%3B if(qd) qd.textContent%3DqTxt%2B' %3D '%2BMath.round(answer)%3B const delay%3DrandDelay()%3B startCountdown(delay)%3B setStatus('ON'%2C'%2300ff88')%3B setTimeout(()%3D>%7B if(!STATE.running) return%3B typeAnswer(answer)%3B STATE.answered%2B%2B%3B STATE.streak%2B%2B%3B if(STATE.streak>STATE.bestStreak) STATE.bestStreak%3DSTATE.streak%3B updateStats()%3B %7D%2C Math.min(delay*0.55%2C250))%3B %7D function kick() %7B hud.classList.add('rx-kick-flash')%3B setTimeout(()%3D>hud.classList.remove('rx-kick-flash')%2C600)%3B setStatus('KICK!'%2C'%23ffd54f')%3B STATE.lastQ%3D''%3B STATE.answerAt%3D0%3B STATE.lastNewQ%3DDate.now()%3B tryAnswer(true)%3B setTimeout(()%3D>setStatus(STATE.paused%3F'PAUSED'%3A'ON'%2CSTATE.paused%3F'%23888'%3A'%2300ff88')%2C700)%3B %7D const watchdog%3DsetInterval(()%3D>%7B if(!STATE.running%7C%7CSTATE.paused) return%3B if(Date.now()-STATE.lastNewQ>STUCK_MS%5BSTATE.speedMode%5D) kick()%3B %7D%2C250)%3B const obs%3Dnew MutationObserver(()%3D>tryAnswer())%3B obs.observe(document.body%2C%7BchildList%3Atrue%2Csubtree%3Atrue%2CcharacterData%3Atrue%7D)%3B const poll%3DsetInterval(()%3D>%7Bif(STATE.running)tryAnswer()%3B%7D%2C40)%3B updateStats()%3B setSpeedUI('normal')%3B tryAnswer(true)%3B %24('_rxPause').onclick%3D()%3D>%7B STATE.paused%3D!STATE.paused%3B %24('_rxPause').textContent%3DSTATE.paused%3F'▶ Resume'%3A'⏸ Pause'%3B %24('_rxPause').classList.toggle('on'%2C!STATE.paused)%3B setStatus(STATE.paused%3F'PAUSED'%3A'ON'%2CSTATE.paused%3F'%23888'%3A'%2300ff88')%3B if(!STATE.paused)%7BSTATE.lastNewQ%3DDate.now()%3BtryAnswer()%3B%7D %7D%3B %24('_rxKick').onclick%3Dkick%3B %24('_rxSkip').onclick%3D()%3D>%7B STATE.lastQ%3D''%3B STATE.answerAt%3D0%3B STATE.streak%3D0%3B updateStats()%3B tryAnswer(true)%3B setStatus('SKIPPED'%2C'%23ff9800')%3B setTimeout(()%3D>setStatus('ON'%2C'%2300ff88')%2C800)%3B %7D%3B %24('_rxTurbo').onclick %3D()%3D>%7BSTATE.speedMode%3D'turbo'%3B setSpeedUI('turbo')%3B STATE.lastNewQ%3DDate.now()%3B%7D%3B %24('_rxNormal').onclick%3D()%3D>%7BSTATE.speedMode%3D'normal'%3BsetSpeedUI('normal')%3BSTATE.lastNewQ%3DDate.now()%3B%7D%3B %24('_rxHuman').onclick %3D()%3D>%7BSTATE.speedMode%3D'human'%3B setSpeedUI('human')%3B STATE.lastNewQ%3DDate.now()%3B%7D%3B %24('_ttrsClose').onclick%3Dstop%3B let drag%3Dfalse%2Cox%3D0%2Coy%3D0%3B %24('_ttrsHdr').onmousedown%3De%3D>%7B if(e.target.id%3D%3D%3D'_ttrsClose') return%3B drag%3Dtrue%3B const r%3Dhud.getBoundingClientRect()%3B hud.style.right%3D'auto'%3Bhud.style.bottom%3D'auto'%3B hud.style.left%3Dr.left%2B'px'%3Bhud.style.top%3Dr.top%2B'px'%3B ox%3De.clientX-r.left%3Boy%3De.clientY-r.top%3B %7D%3B document.addEventListener('mouseup'%2C()%3D>drag%3Dfalse)%3B document.addEventListener('mousemove'%2Ce%3D>%7B if(!drag) return%3B hud.style.left%3D(e.clientX-ox)%2B'px'%3B hud.style.top%3D(e.clientY-oy)%2B'px'%3B %7D)%3B function stop() %7B STATE.running%3Dfalse%3B obs.disconnect()%3B clearInterval(poll)%3B clearInterval(watchdog)%3B clearInterval(nextInTimer)%3B stel.remove()%3B hud.remove()%3B delete window._ttrsBot%3B %7D window._ttrsBot%3D%7Bstop%2Ckick%2Cparse%2CtypeAnswer%2CSTATE%7D%3B %7D)()%3B
+// TTRS Bot Bookmarklet Generator
+// This file creates a bookmarklet that loads and runs the bot
+
+(function() {
+  // Read bot.js and create bookmarklet
+  const botScriptUrl = 'https://raw.githubusercontent.com/willjudd747-jpg/w-ttrs-bot/main/bot.js';
+
+  // Create instructions
+  const instructions = document.createElement('div');
+  instructions.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #050505;
+    border: 2px solid #ff2d78;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 500px;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    z-index: 999999;
+    box-shadow: 0 0 40px rgba(255,45,120,.5);
+    line-height: 1.6;
+  `;
+
+  instructions.innerHTML = `
+    <h2 style="color: #ff2d78; margin-top: 0; letter-spacing: 2px;">⚡ TTRS Bot Setup</h2>
+    <p>Copy the code below and create a new bookmark in your browser:</p>
+    
+    <div style="
+      background: #0d0d0d;
+      border: 1px solid #2a2a2a;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 15px 0;
+      max-height: 200px;
+      overflow-y: auto;
+      word-break: break-all;
+      font-size: 11px;
+    " id="bookmarklet">
+      Loading bookmarklet code...
+    </div>
+
+    <button id="copyBtn" style="
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #c2006e, #ff2d78);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 12px;
+      margin-bottom: 10px;
+      transition: all .2s;
+      font-family: 'Courier New', monospace;
+    ">📋 COPY BOOKMARKLET</button>
+
+    <p style="font-size: 12px; color: #888; margin-bottom: 0;">
+      <strong style="color: #ffd54f;">Instructions:</strong><br>
+      1. Click "COPY BOOKMARKLET"<br>
+      2. Create a new bookmark in your browser<br>
+      3. Paste the code into the URL field<br>
+      4. Visit any TTRS page and click the bookmark
+    </p>
+  `;
+
+  document.body.appendChild(instructions);
+
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999998;
+  `;
+  document.body.appendChild(overlay);
+
+  // Generate bookmarklet
+  const bookmarkletCode = `javascript:(function(){fetch('https://raw.githubusercontent.com/willjudd747-jpg/w-ttrs-bot/main/bot.js').then(r=>r.text()).then(code=>eval(code)).catch(e=>alert('Error loading bot: '+e.message))})();`;
+
+  document.getElementById('bookmarklet').textContent = bookmarkletCode;
+
+  // Copy functionality
+  document.getElementById('copyBtn').addEventListener('click', function() {
+    navigator.clipboard.writeText(bookmarkletCode).then(() => {
+      const btn = this;
+      const original = btn.textContent;
+      btn.textContent = '✅ COPIED!';
+      btn.style.background = 'linear-gradient(90deg, #00ff88, #00cc66)';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = 'linear-gradient(90deg, #c2006e, #ff2d78)';
+      }, 2000);
+    }).catch(() => {
+      alert('Failed to copy. Please try again.');
+    });
+  });
+})();
